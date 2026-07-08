@@ -1,54 +1,51 @@
 services:
-  nginx:
-    build: requirements/ngnix/.
-    container_name: nginx
-    ports:
-      - "443:443"
-    volumes:
-      - wordpress_data:/var/www/html
-    depends_on:
-      - mariadb
-    networks:
-      inception:
-
-  wordpress:
+  mariadb:
+    container_name: mariadb
+    build:
+      context: requirements/mariadb
     env_file:
       - .env
-    build: requirements/wordpress/.
-    container_name: wp-php
+    restart: unless-stopped
     volumes:
-      - wordpress_data:/var/www/html
+      - mariadb_data:/var/lib/mysql
+    secrets:
+      - db_password
+    networks:
+      - inception
+
+  wordpress:
+    container_name: wp-php
+    build:
+      context: requirements/wordpress
+    env_file:
+      - .env
+    restart: unless-stopped
     depends_on:
       - mariadb
-    networks:
-      inception:
+    volumes:
+      - wordpress_data:/var/www/html
     secrets:
       - db_password
       - wp_admin_password
-
-  mariadb:
-    env_file:
-      - .env
-    build: requirements/mariadb/.
-    container_name: mariadb
-    volumes:
-      - mariadb_data:/var/lib/mysql
+      - wp_user_password
     networks:
-      inception:
-    secrets:
-      - db_password
+      - inception
 
-networks:
-  inception:
+  nginx:
+    container_name: nginx
+    build:
+      context: requirements/nginx
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_data:/var/www/html:ro
+    networks:
+      - inception
 
 volumes:
-  wordpress_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/aymisbah/data/wordpress
-
   mariadb_data:
     driver: local
     driver_opts:
@@ -56,9 +53,23 @@ volumes:
       o: bind
       device: /home/aymisbah/data/mariadb
 
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/aymisbah/data/wordpress
+
+networks:
+  inception:
+    driver: bridge
+
 secrets:
   db_password:
     file: ./secrets/db_pass.txt
 
   wp_admin_password:
     file: ./secrets/admin_wp.txt
+
+  wp_user_password:
+    file: ./secrets/wp_user.txt

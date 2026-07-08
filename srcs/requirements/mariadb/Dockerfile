@@ -1,16 +1,13 @@
+FROM debian:bookworm
 
-FROM debian:latest
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y mariadb-server
 
-RUN apt update && apt upgrade && apt install -y \
-	mariadb-server
-
-COPY 50-server.cnf /etc/mysql/mariadb.conf.d/.
+COPY script.sh /script.sh
 COPY init.sql /etc/mysql/init.sql
-COPY script.sh .
 
 RUN mkdir -p /run/mysqld && \
-    chown -R mysql:mysql /run/mysqld && \
-    chmod +x script.sh
+    chmod +x /script.sh
 
-CMD ["./script.sh"]
-
+CMD ["/script.sh"]
