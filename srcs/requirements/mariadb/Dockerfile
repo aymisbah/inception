@@ -4,8 +4,7 @@ RUN apt update && \
     apt upgrade -y && \
     apt install -y mariadb-server
 
-COPY script.sh /script.sh
-COPY init.sql /etc/mysql/init.sql
+COPY tools/script.sh /script.sh
 
 RUN mkdir -p /run/mysqld && \
     chmod +x /script.sh

@@ -1,5 +1,4 @@
-
 srcs/.env
-srcs/secrets/
-srcs/web/
+secrets/
+
 

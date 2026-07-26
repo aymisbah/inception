@@ -7,8 +7,8 @@ RUN apt update && apt upgrade -y && \
         -newkey rsa:2048 \
         -keyout /etc/nginx/ssl/aymisbah.key \
         -out /etc/nginx/ssl/aymisbah.crt \
-        -subj "/C=MA/ST=Casablanca/L=Khouribga/O=42/OU=Inception/CN=aymisbah.42.fr"
+        -subj "/C=MA/ST=Khouribga/L=Khouribga/O=42/OU=Inception/CN=aymisbah.42.fr"
 
-COPY nginx.conf  /etc/nginx/conf.d/default.conf
+COPY conf/nginx.conf  /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]

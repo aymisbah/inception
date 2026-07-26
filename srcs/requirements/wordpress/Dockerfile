@@ -12,7 +12,7 @@ RUN apt update && \
     mkdir -p /var/www/html && \
     chown -R www-data:www-data /var/www
 
-COPY script.sh /script.sh
+COPY tools/script.sh /script.sh
 
 RUN chmod +x /script.sh
 

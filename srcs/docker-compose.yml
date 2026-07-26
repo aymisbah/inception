@@ -14,7 +14,7 @@ services:
       - inception
 
   wordpress:
-    container_name: wp-php
+    container_name: wordpress
     build:
       context: requirements/wordpress
     env_file:
@@ -66,10 +66,10 @@ networks:
 
 secrets:
   db_password:
-    file: ./secrets/db_pass.txt
+    file: ../secrets/db_pass.txt
 
   wp_admin_password:
-    file: ./secrets/admin_wp.txt
+    file: ../secrets/admin_wp.txt
 
   wp_user_password:
-    file: ./secrets/wp_user.txt
+    file: ../secrets/wp_user.txt
